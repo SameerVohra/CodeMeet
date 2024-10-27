@@ -1,24 +1,12 @@
-import { useEffect } from 'react'
+import { Outlet } from 'react-router'
 import './App.css'
-import { io } from 'socket.io-client'
-function App() {
-  const socket = io('http://localhost:3000')
-  useEffect(()=>{
-    socket.on('message', (data)=>{
-      console.log(data );
-    })
-
-    return () => {
-      socket.off("message");
-      socket.disconnect();
-    }
-  }, [])
+function App() {  
   return (
     <>
-      <div className='bg-black min-h-dvh'>
-        <h1 className='text-red-500 text-2xl'>Hello world</h1>
+      <div className='min-h-dvh bg-gradient-to-br from-black via-gray-500 to-gray-300'>
+        <Outlet/>
       </div>
-    </>
+  </>
   )
 }
 

@@ -1,12 +1,13 @@
 const app = require("./app")
 const cors = require("cors");
 const http = require("http");
+const { default: mongoose } = require("mongoose");
 const {Server} = require("socket.io");
 
 require("dotenv").config();
 
+const dburl = process.env.DB_URI;
 const server = http.createServer(app);
-
 const corsOption = {
   origin: "*",
   credentials: true
@@ -17,6 +18,8 @@ const io = new Server(server, {
 })
 
 const port = 3000;
+
+mongoose.connect(dburl).then(()=>console.log("Connected to DB Successfuly")).catch((error)=>console.log("Error connecting to DB: ", error))
 
 io.on("connection", (socket)=>{
   console.log("A new user joined with socked id: ", socket.id)
