@@ -23,6 +23,7 @@ function Login() {
       console.log(response);
       setErr('');
       if(response.status===201){
+        localStorage.setItem("email", response.data.email)
         navigate("/home");
       }
     } catch (error) {

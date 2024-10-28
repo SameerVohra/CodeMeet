@@ -16,7 +16,7 @@ const Login = async(req, res) => {
       return;
     }
 
-    res.status(201).send("User Logged In Successfully");
+    res.status(201).json({email});
   } catch (error) {
     res.status(501).send("Internal Server Error");
     return;
