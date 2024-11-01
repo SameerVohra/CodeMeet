@@ -4,7 +4,8 @@ const ProjectModel = new mongoose.Schema({
   email: String,
   projName: String,
   code: String,
-  password: String
+  password: String,
+  usersJoined: [String]
 })
 
 const Project = mongoose.model("Project", ProjectModel);

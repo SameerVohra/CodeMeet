@@ -19,7 +19,14 @@ const io = new Server(server, {
 
 const port = 3000;
 
-mongoose.connect(dburl).then(()=>console.log("Connected to DB Successfuly")).catch((error)=>console.log("Error connecting to DB: ", error))
+mongoose
+  .connect(dburl)
+  .then(()=>
+    console.log("Connected to DB Successfuly")
+  )
+  .catch((error)=>
+    console.log("Error connecting to DB: ", error)
+  )
 
 io.on("connection", (socket)=>{
   console.log("A new user joined with socked id: ", socket.id)

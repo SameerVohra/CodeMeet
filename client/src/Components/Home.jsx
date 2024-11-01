@@ -8,13 +8,16 @@ import {
   Typography, 
   IconButton, 
   Collapse, 
-  Tooltip 
+  Tooltip, 
+  CardActions 
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import link from "../assets/link.json";
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 function Home() {
+  const navigate = useNavigate();
   const [make, setMake] = useState(false);
   const [join, setJoin] = useState(false);
   const [projects, setProjects] = useState([]);
@@ -40,8 +43,9 @@ function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 text-gray-900 p-6">
-      <div className="flex space-x-4 mb-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 p-6 text-gray-900">
+      {/* Header Buttons */}
+      <div className="flex space-x-6 mb-8">
         <Button
           variant="contained"
           color="primary"
@@ -49,7 +53,9 @@ function Home() {
             setMake(!make);
             setJoin(false);
           }}
-          className={`transition-transform duration-200 ${make ? 'scale-105' : ''}`}
+          className={`transition-transform duration-300 ${
+            make ? 'scale-105 shadow-lg' : 'hover:scale-105 hover:shadow-md'
+          }`}
         >
           Make A New Project
         </Button>
@@ -61,15 +67,18 @@ function Home() {
             setJoin(!join);
             setMake(false);
           }}
-          className={`transition-transform duration-200 ${join ? 'scale-105' : ''}`}
+          className={`transition-transform duration-300 ${
+            join ? 'scale-105 shadow-lg' : 'hover:scale-105 hover:shadow-md'
+          }`}
         >
           Join A Project
         </Button>
       </div>
 
-      <div className="w-full max-w-lg">
+      {/* Make and Join Cards */}
+      <div className="w-full max-w-lg space-y-6">
         {make && (
-          <Card className="bg-white shadow-md mb-6">
+          <Card className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow">
             <CardContent>
               <MakeProject />
             </CardContent>
@@ -77,7 +86,7 @@ function Home() {
         )}
 
         {join && (
-          <Card className="bg-white shadow-md">
+          <Card className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow">
             <CardContent>
               <JoinProject />
             </CardContent>
@@ -85,19 +94,23 @@ function Home() {
         )}
       </div>
 
-      <div className="w-full max-w-lg mt-8">
+      {/* Project List */}
+      <div className="w-full max-w-lg mt-12 space-y-6">
         {projects.length > 0 ? (
           projects.map((proj, index) => (
-            <Card key={index} className="bg-white shadow-md mb-4">
+            <Card
+              key={index}
+              className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all"
+            >
               <CardContent>
-                <Typography variant="h6" className="mb-2 font-medium">
-                  Project Name: {proj.projName}
+                <Typography variant="h6" className="font-semibold mb-2">
+                  {proj.projName}
                 </Typography>
-                <Typography variant="body1" className="mb-2">
+                <Typography variant="body2" className="text-gray-600 mb-4">
                   Project ID: {proj.code}
                 </Typography>
 
-                <div className="flex items-center">
+                <div className="flex items-center space-x-4">
                   <Tooltip title="Show/Hide Password">
                     <IconButton
                       onClick={() => togglePasswordVisibility(index)}
@@ -107,16 +120,26 @@ function Home() {
                     </IconButton>
                   </Tooltip>
 
-                  <Collapse in={showPassword[index]}>
-                    <Typography 
-                      variant="body2" 
-                      className="ml-2 font-mono text-gray-700"
-                    >
-                      {proj.password}
-                    </Typography>
-                  </Collapse>
+                  <Typography
+                    variant="body1"
+                    className={`font-mono text-lg ${
+                      !showPassword[index] ? 'text-gray-400' : 'text-gray-700'
+                    }`}
+                  >
+                    {showPassword[index] ? proj.password : '******'}
+                  </Typography>
                 </div>
               </CardContent>
+              <CardActions className="justify-end">
+                <Button
+                  size="small"
+                  color="primary"
+                  className="hover:underline"
+                  onClick={()=>navigate(`/project?id=${proj.code}`)}
+                >
+                  Show Project
+                </Button>
+              </CardActions>
             </Card>
           ))
         ) : (
