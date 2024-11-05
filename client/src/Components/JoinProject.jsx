@@ -11,7 +11,6 @@ function JoinProject() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
-
   const handleJoin = async (e) => {
     e.preventDefault();
 

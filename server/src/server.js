@@ -14,7 +14,7 @@ const corsOption = {
 }
 
 const io = new Server(server, {
-  cors:{corsOption}
+  cors:corsOption
 })
 
 const port = 3000;
@@ -29,9 +29,13 @@ mongoose
   )
 
 io.on("connection", (socket)=>{
-  console.log("A new user joined with socked id: ", socket.id)
-  socket.on("message", (data)=>{
-    console.log(data);
+  socket.on("joinProject", ({projId, email}) => {
+    socket.join(projId);
+    console.log(`User ${email} joined project ${projId}`);
+  });
+
+  socket.on("writing", ({projId, text})=>{
+    socket.to(projId).emit("updatedText", text);
   })
 
   socket.on("disconnect", ()=>{

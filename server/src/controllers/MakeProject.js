@@ -13,7 +13,8 @@ const MakeProject = async(req, res) => {
       projName,
       code,
       password,
-      usersJoined: []
+      usersJoined: [],
+      user_input: ""
     })
     await newProj.save();
     res.status(201).json({code: code, password: password, status:201});

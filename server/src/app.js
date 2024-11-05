@@ -5,6 +5,8 @@ const cors = require("cors");
 const MakeProject = require("./controllers/MakeProject");
 const GetProjects = require("./controllers/GetProjects");
 const JoinProject = require("./controllers/JoinProject");
+const GetProjectDetails = require("./controllers/GetProjectDetails");
+const SaveCode = require("./controllers/SaveCode");
 const app = express();
 app.use(cors())
 app.use(express.json());
@@ -15,5 +17,7 @@ app.post("/login", Login);
 app.post("/make-project", MakeProject);
 app.get("/get-projects", GetProjects);
 app.post("/join-project", JoinProject);
+app.get("/get-project-details", GetProjectDetails)
+app.post("/save-code", SaveCode);
 
 module.exports = app;
