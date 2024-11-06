@@ -14,7 +14,7 @@ const corsOption = {
 }
 
 const io = new Server(server, {
-  cors:corsOption
+  cors:{corsOption}
 })
 
 const port = 3000;
@@ -36,6 +36,11 @@ io.on("connection", (socket)=>{
 
   socket.on("writing", ({projId, text})=>{
     socket.to(projId).emit("updatedText", text);
+  })
+
+  socket.on("langChange", ({projId, newLang})=>{
+    socket.to(projId).emit("newLang", newLang);
+
   })
 
   socket.on("disconnect", ()=>{

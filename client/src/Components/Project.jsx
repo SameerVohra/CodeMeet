@@ -9,6 +9,10 @@ const socket = io(link.url);
 
 function Project() {
   const [text, setText] = useState("");
+  const [lang, setLang] = useState("cpp");
+  const [testcase, setTestcase] = useState("");
+
+
   const params = new URLSearchParams(window.location.search);
   const projId = params.get("id");
   const email = localStorage.getItem("email");
@@ -62,20 +66,38 @@ function Project() {
     return () => clearInterval(intervalId);
   }, [text, projId]);
 
+  useEffect(()=>{
+    socket.emit("langChange", {projId, newLang: lang})
+    socket.on("newLang", (newLang)=>{
+      setLang(newLang);
+    })
+
+  }, [lang])
+
   return (
     <>    
       <h1>Project ID: {projId}</h1>
+      <select value={lang} onChange={(e)=>setLang(e.target.value)}>
+        <option value="cpp">C++</option>
+        <option value="java">JAVA</option>
+        <option value="python">PYTHON</option>
+        <option value="javascript">JAVASCRIPT</option>
+      </select>
+
+      {lang}
       <div className='w-full h-[80vh]'>
         <Editor
           height="100%"
           width="100%"
           theme="vs-dark"
-          language="cpp"
+          language={lang}
           onChange={handleEditorChange}
           value={text}
           defaultValue={`#include<iostream>\nusing namespace std;\n\nint main(){\n\t\n\treturn 0;\n}`}
         />
       </div>
+
+      <textarea rows={10} cols={50} placeholder='Enter Custom Testcase'/>
     </>
   );
 }

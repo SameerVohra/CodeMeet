@@ -7,7 +7,7 @@ import link from '../assets/link.json';
 import { useNavigate } from 'react-router';
 
 function Login() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -20,10 +20,9 @@ function Login() {
 
     try {
       const response = await axios.post(`${link.url}/login`, { email, password });
-      console.log(response);
       setErr('');
-      if(response.status===201){
-        localStorage.setItem("email", response.data.email)
+      if (response.status === 201) {
+        localStorage.setItem("email", response.data.email);
         navigate("/home");
       }
     } catch (error) {
@@ -42,7 +41,7 @@ function Login() {
       justifyContent="center"
       minHeight="100vh"
       sx={{
-        background: 'linear-gradient(135deg, #4A90E2, #005C99)',
+        background: 'linear-gradient(135deg, #1A2980, #26D0CE)',
         color: 'white',
       }}
     >
@@ -51,18 +50,20 @@ function Login() {
           component="form"
           onSubmit={handleLogin}
           sx={{
-            p: 4,
-            borderRadius: 3,
-            boxShadow: '0px 10px 30px rgba(0, 0, 0, 4)',
-            backgroundColor: 'rgba(180, 180, 180)',
+            p: 5,
+            borderRadius: 4,
+            boxShadow: '0px 10px 40px rgba(0, 0, 0, 0.3)',
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+            backdropFilter: 'blur(20px)',
+            textAlign: 'center',
           }}
         >
-          <Typography variant="h4" gutterBottom textAlign="center" sx={{ color: 'white' }}>
+          <Typography variant="h4" gutterBottom sx={{ color: '#ffffff', fontWeight: 'bold' }}>
             Welcome Back!
           </Typography>
 
           {err && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" sx={{ mb: 3, borderRadius: 1 }}>
               {err}
             </Alert>
           )}
@@ -77,19 +78,13 @@ function Login() {
             onChange={(e) => setEmail(e.target.value)}
             sx={{
               '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: 'rgba(255, 255, 255, 0.5)',
-                },
-                '&:hover fieldset': {
-                  borderColor: '#ffffff',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#4A90E2',
-                },
-                '& input': { // Set input text color
-                  color: 'white',
-                },
+                borderRadius: 2,
+                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.4)' },
+                '&:hover fieldset': { borderColor: '#ffffff' },
+                '&.Mui-focused fieldset': { borderColor: '#26D0CE' },
+                '& input': { color: 'white' },
               },
+              '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
             }}
           />
 
@@ -112,19 +107,13 @@ function Login() {
             }}
             sx={{
               '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: 'rgba(255, 255, 255, 0.5)',
-                },
-                '&:hover fieldset': {
-                  borderColor: '#ffffff',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#4A90E2',
-                },
-                '& input': { // Set input text color
-                  color: 'white',
-                },
+                borderRadius: 2,
+                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.4)' },
+                '&:hover fieldset': { borderColor: '#ffffff' },
+                '&.Mui-focused fieldset': { borderColor: '#26D0CE' },
+                '& input': { color: 'white' },
               },
+              '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.7)' },
             }}
           />
 
@@ -133,10 +122,17 @@ function Login() {
             variant="contained"
             fullWidth
             sx={{
-              mt: 2,
-              backgroundColor: '#4A90E2',
+              mt: 3,
+              py: 1.2,
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              color: '#1A2980',
+              backgroundColor: '#ffffff',
+              borderRadius: 3,
+              transition: '0.3s',
               '&:hover': {
-                backgroundColor: '#005C99',
+                backgroundColor: '#26D0CE',
+                color: '#ffffff',
               },
             }}
             disabled={loading}
@@ -144,9 +140,9 @@ function Login() {
             {loading ? 'Logging in...' : 'Login'}
           </Button>
 
-          <Typography variant="body2" textAlign="center" sx={{ mt: 2, color: 'white' }}>
+          <Typography variant="body2" sx={{ mt: 3, color: 'rgba(255, 255, 255, 0.8)' }}>
             Don't have an account?{' '}
-            <Link href="/register" variant="body2" sx={{ color: 'white', textDecoration: 'none' }}>
+            <Link href="/register" sx={{ color: '#26D0CE', textDecoration: 'underline' }}>
               Register here
             </Link>
           </Typography>
