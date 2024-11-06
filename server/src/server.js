@@ -14,8 +14,9 @@ const corsOption = {
 }
 
 const io = new Server(server, {
-  cors:{corsOption}
-})
+  cors: corsOption
+});
+
 
 const port = 3000;
 

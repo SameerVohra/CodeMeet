@@ -11,7 +11,9 @@ const SaveCode = async(req, res) => {
 
     project.user_input = code;
     await project.save();
+    res.status(201).send(project)
   } catch (error) {
+    console.log(error);
     res.status(501).send("Internal Server Error");
   }
 }
