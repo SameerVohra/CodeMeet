@@ -9,7 +9,6 @@ const CompileCode = async (req, res) => {
   }
 
   try {
-    console.log(testCases);
     const extension = getExtension(language);
     const fileName = `temp${extension}`;
     
@@ -41,12 +40,8 @@ const getCommand = (language, fileName) => {
   switch (language) {
     case "cpp":
       return `g++ ${fileName} -o temp && ./temp`;
-    case "java": 
-      return `javac ${fileName} && java ${fileName.split('.')[0]}`;
     case "python":
       return `python3 ${fileName}`;
-    case "javascript":
-      return `node ${fileName}`;
     default:
       throw new Error("Unsupported language");
   }
@@ -55,9 +50,7 @@ const getCommand = (language, fileName) => {
 const getExtension = (language) => {
   switch (language) {
     case 'cpp': return '.cpp';
-    case 'java': return '.java';
     case 'python': return '.py';
-    case 'javascript': return '.js';
     default: throw new Error("Unsupported language");
   }
 };
