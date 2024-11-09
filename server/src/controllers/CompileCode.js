@@ -15,7 +15,7 @@ const CompileCode = async (req, res) => {
     fs.writeFileSync(fileName, code);
 
     const command = getCommand(language, fileName);
-    const input = testCases?testCases:"";
+    const input = testCases;
 
     const childProcess = exec(command, { timeout: 5000 }, (error, stdout, stderr) => {
       fs.unlinkSync(fileName);

@@ -12,10 +12,9 @@ const JoinProject = async(req, res) => {
       res.status(403).send("Password is Incorrect");
       return;
     }
-    project.usersJoined.push(email);
-    await project.save();
     res.status(201).json(project);
   } catch (error) {
+    console.log(error);
     res.status(501).send("Internal Server Error");
     return;
   }

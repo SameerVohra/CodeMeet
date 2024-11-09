@@ -1,7 +1,7 @@
 const Project = require("../models/Project");
 
 const SaveCode = async(req, res) => {
-  const {code, projId} = req.body;
+  const {code, projId, lang} = req.body;
   try {
     const project = await Project.findOne({code: projId});
     if(!project){
@@ -9,7 +9,12 @@ const SaveCode = async(req, res) => {
       return;
     }
 
-    project.user_input = code;
+    if(lang==='cpp'){
+      project.user_code[0].input=code;
+    }
+    else{
+      project.user_code[1].input=code;
+    }
     await project.save();
     res.status(201).send(project)
   } catch (error) {

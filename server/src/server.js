@@ -29,8 +29,6 @@ io.on("connection", (socket) => {
 
   socket.on("joinProject", ({ projId, email }) => {
     socket.join(projId);
-    socket.join(`${projId}-video-room`);
-    socket.to(`${projId}-video-room`).emit("userJoinedVideo", {email, socketId: socket.id})
     console.log(`User ${email} joined project ${projId}`);
   });
 
@@ -46,15 +44,6 @@ io.on("connection", (socket) => {
     socket.to(projId).emit("user", {user, sender: socket.id})
   })
 
-  socket.on("signal", (data)=>{
-    const {signal, socketId} = data;
-    io.to(socketId).emit("signal", {signal, sender: socket.id});
-  })
-
-  socket.on("user", ({projId, user})=>{
-    socket.to(projId).emit("user", { user, sender: socket.id });
-  })
-  
   socket.on("disconnect", () => {
     console.log(`User with socket id: ${socket.id} disconnected`);
     socket.broadcast.emit("userDisconnected", { socketId: socket.id });
