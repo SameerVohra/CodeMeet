@@ -28,6 +28,7 @@ io.on("connection", (socket) => {
   console.log(`User with socket id: ${socket.id} connected`);
 
   socket.on("joinProject", ({ projId, email }) => {
+    io.emit("greet", email)
     socket.join(projId);
     console.log(`User ${email} joined project ${projId}`);
   });
@@ -44,9 +45,10 @@ io.on("connection", (socket) => {
     socket.to(projId).emit("user", {user, sender: socket.id})
   })
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", (email) => {
     console.log(`User with socket id: ${socket.id} disconnected`);
     socket.broadcast.emit("userDisconnected", { socketId: socket.id });
+    io.emit("remove", email);
   });
 
   socket.emit("message", "Welcome to the project");
