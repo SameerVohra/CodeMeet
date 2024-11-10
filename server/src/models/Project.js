@@ -5,7 +5,8 @@ const ProjectModel = new mongoose.Schema({
   projName: String,
   code: String,
   password: String,
-  user_code: [{lang: String, input: String}]
+  user_code: [{lang: String, input: String}],
+  joined_users: [String],
 })
 
 const Project = mongoose.model("Project", ProjectModel);

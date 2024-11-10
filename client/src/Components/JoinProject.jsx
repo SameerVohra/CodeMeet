@@ -27,7 +27,6 @@ function JoinProject() {
       const data = await axios.post(`${link.url}/join-project`, {
         code,
         password,
-        email: localStorage.getItem("email"),
       });
       console.log(data);
       

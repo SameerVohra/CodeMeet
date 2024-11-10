@@ -1,7 +1,7 @@
 const Project = require("../models/Project");
 
 const JoinProject = async(req, res) => {
-  const {code, password, email} = req.body;
+  const {code, password} = req.body;
   try {
     const project = await Project.findOne({code});
     if(!project){

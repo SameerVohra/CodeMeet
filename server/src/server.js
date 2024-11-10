@@ -25,9 +25,10 @@ mongoose
   .catch((error) => console.log("Error connecting to DB: ", error));
 
 io.on("connection", (socket) => {
-  console.log(`User with socket id: ${socket.id} connected`);
-
   socket.on("joinProject", ({ projId, email }) => {
+    socket.data.projId = projId;
+    socket.data.email = email;
+    io.to(projId).emit("user:joined", ({email, projId}));
     socket.join(projId);
   });
 
@@ -39,11 +40,14 @@ io.on("connection", (socket) => {
     socket.to(projId).emit("newLang", newLang);
   });
 
-  socket.on("disconnect", ()=>{
-    socket.emit("userDisconnected", {socketId: socket.id})
-    console.log(`${socket.id} Disconnected`);
-  });
+  socket.on("leave:project", ({email, projId})=>{
+    console.log("leave:project called")
+    socket.to(projId).emit("user:disconnected", email)
+  })
 
+  socket.on("disconnect", ()=>{
+    console.log(`${socket.id} disconnected`);
+  })
   socket.emit("message", "Welcome to the project");
 });
 

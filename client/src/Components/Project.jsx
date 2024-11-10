@@ -4,6 +4,7 @@ import link from "../assets/link.json";
 import axios from 'axios';
 import debounce from 'lodash.debounce';
 import Editor from '@monaco-editor/react';
+import VideoCall from './VideoCall';
 
 const socket = io(link.url);
 
@@ -14,6 +15,7 @@ function Project() {
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [users, setUsers] = useState([]);
 
   const params = new URLSearchParams(window.location.search);
   const projId = params.get("id");
@@ -26,6 +28,8 @@ function Project() {
       try {
         const { data } = await axios.get(`${link.url}/get-project-details?projId=${projId}`);
         setText(lang === 'cpp' ? data.user_code[0].input : data.user_code[1].input);
+        console.log(data)
+        setUsers(data.joined_users);
       } catch (err) {
         setError("Error fetching project details");
       } finally {
@@ -35,17 +39,39 @@ function Project() {
     fetchProjectDetails();
   }, [projId, lang]);
 
+  const handleUserJoin = (data) => {
+    const {email, projId} = data;
+  }
+
+  const handleDisconnectUser = (data)=>{
+    const {email, projId} = data;
+    console.log(email, " disconnected")
+  }
+
   useEffect(() => {
     socket.emit("joinProject", { projId, email });
+    socket.on("user:joined", handleUserJoin);
+    socket.on("user:disconnected", handleDisconnectUser);
+    
     return () => {
-      socket.disconnect();
+      if(socket.connected){
+        socket.emit("leave:project", {email, projId});
+        socket.disconnect();
+      }
     };
   }, []);
+
+  useEffect(()=>{
+    socket.on("user:disconnected", ({projId, email})=>{
+      console.log(projId, email);
+    })
+  }, [])
 
   useEffect(() => {
     socket.on("updatedText", (updatedText) => setText(updatedText));
     return () => socket.off("updatedText");
   }, []);
+
 
   const emitWriting = debounce((newText) => {
     socket.emit("writing", { projId, text: newText });
@@ -159,6 +185,8 @@ function Project() {
         <h2 className="text-lg font-semibold mb-2">Output:</h2>
         <pre className="whitespace-pre-wrap text-green-400">{output}</pre>
       </div>
+
+      <VideoCall email={email} projId={projId}/> 
     </div>
   );
 }
