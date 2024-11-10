@@ -38,11 +38,13 @@ function Project() {
 
   useEffect(() => {
     socket.emit("joinProject", { projId, email });
-    const welcomeSocket = (msg) => setUsers((prev) => [...prev, msg]);
-    const removeSocket = (msg) => setUsers((prev) => prev.filter((email) => email !== msg));
+    const welcomeSocket = (users) => setUsers(users);
+
+    const removeSocket = (msg) => setUsers((prev) => prev.filter((user) => user !== msg));
 
     socket.on("greet", welcomeSocket);
     socket.on("remove", removeSocket);
+    
     return () => {
       socket.off("greet", welcomeSocket);
       socket.off("remove", removeSocket);
@@ -66,8 +68,9 @@ function Project() {
 
   const handleSaveCode = async () => {
     try {
-      const data = await axios.post(`${link.url}/save-code`, { code: text, projId, lang });
-      console.log(data);
+      if(text.trim()!==""){
+        await axios.post(`${link.url}/save-code`, { code: text, projId, lang });
+      }
     } catch (err) {
       console.error("Error saving code:", err);
     }
@@ -97,26 +100,13 @@ function Project() {
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.ctrlKey && e.key === 's') {
-        e.preventDefault();
-        handleSaveCode();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
   return (
     <div className="flex flex-col items-center justify-between bg-gray-900 text-white min-h-screen p-6 w-full">
-      {/* Header */}
       <header className="w-full max-w-4xl bg-indigo-800 rounded-md shadow-lg p-4 flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">CODE MEET</h1>
         <p className="text-sm text-gray-300">Project ID: {projId}</p>
       </header>
 
-      {/* Active Users Panel */}
       <div className="w-full max-w-4xl bg-gray-800 rounded-md p-4 mb-4">
         <h2 className="font-semibold text-lg">Active Users</h2>
         <div className="flex gap-2 flex-wrap">
@@ -126,7 +116,6 @@ function Project() {
         </div>
       </div>
 
-      {/* Controls and Language Selection */}
       <div className="flex gap-4 mb-6 w-full max-w-4xl justify-between">
         <select
           className="px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded"
@@ -151,10 +140,8 @@ function Project() {
         >
           Save Code
         </button>
-        <p className="text-sm text-gray-400">or press Ctrl+S to save</p>
       </div>
 
-      {/* Code Editor */}
       <div className="w-full max-w-4xl h-[60vh] mb-4 border border-gray-700 rounded-lg overflow-hidden">
         <Editor
           height="100%"
@@ -165,7 +152,6 @@ function Project() {
         />
       </div>
 
-      {/* Test Case Input */}
       <textarea
         className="w-full max-w-4xl p-4 h-32 bg-gray-800 rounded-lg border border-gray-700 mb-4 text-white"
         rows={4}
@@ -174,7 +160,6 @@ function Project() {
         onChange={(e) => setTestcase(e.target.value)}
       />
 
-      {/* Loading and Error Messages */}
       {loading && (
         <div className="flex justify-center items-center text-green-500 font-semibold mt-4">
           <svg className="animate-spin h-5 w-5 mr-3 border-t-2 border-white rounded-full" viewBox="0 0 24 24"></svg>
@@ -189,7 +174,6 @@ function Project() {
         </div>
       )}
 
-      {/* Output Display */}
       <div className="w-full max-w-4xl p-4 bg-gray-800 rounded-lg border border-gray-700 mt-4">
         <h2 className="text-lg font-semibold mb-2">Output:</h2>
         <pre className="whitespace-pre-wrap text-green-400">{output}</pre>

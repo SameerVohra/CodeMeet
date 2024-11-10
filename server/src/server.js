@@ -10,14 +10,16 @@ const dburl = process.env.DB_URI;
 const server = http.createServer(app);
 const corsOption = {
   origin: "*",
-  credentials: true
+  credentials: true,
 };
 
 const io = new Server(server, {
-  cors: corsOption
+  cors: corsOption,
 });
 
 const port = 3000;
+
+const users = new Map();
 
 mongoose
   .connect(dburl)
@@ -28,8 +30,9 @@ io.on("connection", (socket) => {
   console.log(`User with socket id: ${socket.id} connected`);
 
   socket.on("joinProject", ({ projId, email }) => {
-    io.emit("greet", email)
+    users.set(socket.id, email);
     socket.join(projId);
+    io.to(projId).emit("greet", Array.from(users.values()));
     console.log(`User ${email} joined project ${projId}`);
   });
 
@@ -41,14 +44,15 @@ io.on("connection", (socket) => {
     socket.to(projId).emit("newLang", newLang);
   });
 
-  socket.on("user", ({projId, user})=>{
-    socket.to(projId).emit("user", {user, sender: socket.id})
-  })
-
-  socket.on("disconnect", (email) => {
-    console.log(`User with socket id: ${socket.id} disconnected`);
-    socket.broadcast.emit("userDisconnected", { socketId: socket.id });
-    io.emit("remove", email);
+  socket.on("disconnect", () => {
+    const email = users.get(socket.id);
+    if (email) {
+      users.delete(socket.id);
+      console.log(`User ${email} with socket id: ${socket.id} disconnected`);
+      io.emit("remove", email);
+      // Emit updated user list to everyone after a user disconnects
+      io.emit("greet", Array.from(users.values()));
+    }
   });
 
   socket.emit("message", "Welcome to the project");
