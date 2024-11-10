@@ -14,14 +14,13 @@ function Project() {
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [users, setUsers] = useState([]);
 
   const params = new URLSearchParams(window.location.search);
   const projId = params.get("id");
   const email = localStorage.getItem("email");
 
   useEffect(() => {
-    const fetchProjectDetails = async () => {
+    const fetchProjectDetails =async () => {
       setLoading(true);
       setError("");
       try {
@@ -38,19 +37,10 @@ function Project() {
 
   useEffect(() => {
     socket.emit("joinProject", { projId, email });
-    const welcomeSocket = (users) => setUsers(users);
-
-    const removeSocket = (msg) => setUsers((prev) => prev.filter((user) => user !== msg));
-
-    socket.on("greet", welcomeSocket);
-    socket.on("remove", removeSocket);
-    
     return () => {
-      socket.off("greet", welcomeSocket);
-      socket.off("remove", removeSocket);
       socket.disconnect();
     };
-  }, [projId, email]);
+  }, []);
 
   useEffect(() => {
     socket.on("updatedText", (updatedText) => setText(updatedText));
@@ -106,15 +96,6 @@ function Project() {
         <h1 className="text-2xl font-bold">CODE MEET</h1>
         <p className="text-sm text-gray-300">Project ID: {projId}</p>
       </header>
-
-      <div className="w-full max-w-4xl bg-gray-800 rounded-md p-4 mb-4">
-        <h2 className="font-semibold text-lg">Active Users</h2>
-        <div className="flex gap-2 flex-wrap">
-          {users.map((user, index) => (
-            <p key={index} className="text-sm text-gray-400 bg-gray-700 px-2 py-1 rounded">{user}</p>
-          ))}
-        </div>
-      </div>
 
       <div className="flex gap-4 mb-6 w-full max-w-4xl justify-between">
         <select
