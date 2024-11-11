@@ -9,10 +9,6 @@ const GetProjectDetails = require("./controllers/GetProjectDetails");
 const SaveCode = require("./controllers/SaveCode");
 const bodyParser = require("body-parser");
 const CompileCode = require("./controllers/CompileCode");
-const GetJoinedUsers = require("./controllers/GetJoinedUsers");
-const AddJoinedUsers = require("./controllers/AddJoinedUsers");
-const RemoveJoinedUser = require("./controllers/RemoveJoinedUser");
-
 const app = express();
 
 app.use(cors())
@@ -28,7 +24,4 @@ app.post("/join-project", JoinProject);
 app.get("/get-project-details", GetProjectDetails)
 app.post("/save-code", SaveCode);
 app.post("/compile", CompileCode);
-app.get("/get-joined-users", GetJoinedUsers);
-app.post("/add-joined-user", AddJoinedUsers);
-app.patch("/remove-user", RemoveJoinedUser);
 module.exports = app;

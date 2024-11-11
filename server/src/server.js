@@ -17,19 +17,30 @@ const io = new Server(server, {
   cors: corsOption,
 });
 
-const port = 3000
+const port = 3000;
 
 mongoose
   .connect(dburl)
   .then(() => console.log("Connected to DB Successfully"))
   .catch((error) => console.log("Error connecting to DB: ", error));
 
+const usersPerProject = {};
+
 io.on("connection", (socket) => {
   socket.on("joinProject", ({ projId, email }) => {
     socket.data.projId = projId;
     socket.data.email = email;
-    io.to(projId).emit("user:joined", ({email, projId}));
+    
+    if (!usersPerProject[projId]) {
+      usersPerProject[projId] = new Set();
+    }
+
+    usersPerProject[projId].add(email);
     socket.join(projId);
+    
+    io.to(projId).emit("user:joined", { usersJoined: Array.from(usersPerProject[projId]) });
+    
+    console.log(`User ${email} joined project ${projId}`);
   });
 
   socket.on("writing", ({ projId, text }) => {
@@ -40,14 +51,23 @@ io.on("connection", (socket) => {
     socket.to(projId).emit("newLang", newLang);
   });
 
-  socket.on("leave:project", ({email, projId})=>{
-    console.log("leave:project called")
-    socket.to(projId).emit("user:disconnected", email)
-  })
+  socket.on("leave:project", ({ email, projId }) => {
+    console.log(`User ${email} leaving project ${projId}`);
+    if (usersPerProject[projId]) {
+      usersPerProject[projId].delete(email);
+      io.to(projId).emit("user:disconnected", { usersJoined: Array.from(usersPerProject[projId]) });
+    }
+  });
 
-  socket.on("disconnect", ()=>{
+  socket.on("disconnect", () => {
+    const { projId, email } = socket.data;
+    if (projId && email && usersPerProject[projId]) {
+      usersPerProject[projId].delete(email);
+      io.to(projId).emit("user:disconnected", { projId, email, usersJoined: Array.from(usersPerProject[projId]) });
+    }
     console.log(`${socket.id} disconnected`);
-  })
+  });
+
   socket.emit("message", "Welcome to the project");
 });
 

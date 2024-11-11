@@ -42,6 +42,8 @@ const getCommand = (language, fileName) => {
       return `g++ ${fileName} -o temp && ./temp`;
     case "python":
       return `python3 ${fileName}`;
+    case "c":
+      return `gcc ${fileName} -o temp && ./temp`;
     default:
       throw new Error("Unsupported language");
   }
@@ -51,6 +53,7 @@ const getExtension = (language) => {
   switch (language) {
     case 'cpp': return '.cpp';
     case 'python': return '.py';
+    case 'c': return '.c'
     default: throw new Error("Unsupported language");
   }
 };

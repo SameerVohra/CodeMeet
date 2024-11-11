@@ -12,8 +12,11 @@ const SaveCode = async(req, res) => {
     if(lang==='cpp'){
       project.user_code[0].input=code;
     }
-    else{
+    else if(lang==='python'){
       project.user_code[1].input=code;
+    }
+    else{
+      project.user_code[2].input=code;
     }
     await project.save();
     res.status(201).send(project)
