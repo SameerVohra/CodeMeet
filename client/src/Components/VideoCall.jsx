@@ -1,7 +1,6 @@
 import React from 'react'
 
-function VideoCall({projId, email}) {
-  
+function VideoCall({projId, email}) { 
   return (
     <>
       <h1>Project Id: {projId}</h1>
