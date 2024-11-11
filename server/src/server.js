@@ -71,6 +71,10 @@ io.on("connection", (socket) => {
   socket.emit("message", "Welcome to the project");
 });
 
+app.get("/test", (req, res)=>{
+  res.send("Tesing")
+})
+
 server.listen(port, () => {
   console.log(`Started listening to port ${port}`);
 });
