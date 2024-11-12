@@ -1,15 +1,14 @@
 # CodeMeet
 
-A collaborative code editor that enables multiple users to work together on a single project in real-time. With integrated video chat and support for compiling code in Java, C++, JavaScript, and Python, CodeMeet is designed to enhance collaborative coding experiences.
+A collaborative code editor that enables multiple users to work together on a single project in real-time. With integrated video chat and support for compiling code in C, C++, and Python, CodeMeet is designed to enhance collaborative coding experiences.
 
 ## Features
 
 - **Real-time Collaboration**: Multiple users can edit code simultaneously, with live updates.
 - **Video Chat**: Communicate with collaborators directly within the editor using the integrated video chat feature.
 - **Multi-language Code Compiler**: Compile and run code in the following programming languages:
-  - Java
+  - C
   - C++
-  - JavaScript
   - Python
 
 ## Technologies Used
@@ -17,7 +16,6 @@ A collaborative code editor that enables multiple users to work together on a si
 - **Frontend**: React, Tailwind CSS
 - **Backend**: Node.js, Express
 - **Real-time Communication**: Socket.IO
-- **Code Compilation**: Docker (for executing code in different languages)
 
 ## Installation
 
