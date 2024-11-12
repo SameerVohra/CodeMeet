@@ -59,6 +59,18 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("offer", (data)=>{
+    socket.to(data.projId).emit("offer", data);
+  })
+
+  socket.on("answer", (data)=>{
+    socket.to(data.projId).emit("answer", data);
+  })
+
+  socket.on("ice:candidate", (data)=>{
+    socket.to(data.projId).emit("ice:candidate", data);
+  })
+
   socket.on("disconnect", () => {
     const { projId, email } = socket.data;
     if (projId && email && usersPerProject[projId]) {
