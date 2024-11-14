@@ -18,7 +18,7 @@ const io = new Server(server, {
 });
 
 const corsOptions = {
-  origin: "*",
+  origin: ["http://localhost:5173/", "https://codemeet-nine.vercel.app/"],
   methods: ["GET", "POST"],
   credentials: true,
 };
