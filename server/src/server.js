@@ -17,6 +17,12 @@ const io = new Server(server, {
   },
 });
 
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 const port = 3000;
 
