@@ -4,7 +4,6 @@ import link from "../assets/link.json";
 import axios from 'axios';
 import debounce from 'lodash.debounce';
 import Editor from '@monaco-editor/react';
-import VideoCall from './VideoCall';
 
 const socket = io(link.url);
 
@@ -204,8 +203,6 @@ function Project() {
           </div>
         ))}
       </div>
-
-      <VideoCall email={email} projId={projId} className="mt-12" />
     </div>
   );
 }
