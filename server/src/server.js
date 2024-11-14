@@ -9,7 +9,6 @@ require("dotenv").config();
 const dburl = process.env.DB_URI;
 const server = http.createServer(app);
 
-
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:5173", "https://codemeet-nine.vercel.app"],
@@ -18,8 +17,6 @@ const io = new Server(server, {
   },
 });
 
-
-
 const corsOptions = {
   origin: ["http://localhost:5173", "https://codemeet-nine.vercel.app"],
   methods: ["GET", "POST"],
@@ -27,7 +24,6 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));  // Handles preflight requests
-
 
 const port = 3000;
 
@@ -38,6 +34,7 @@ mongoose
 
 const usersPerProject = {};
 
+// Socket.IO connection
 io.on("connection", (socket) => {
   socket.on("joinProject", ({ projId, email }) => {
     socket.data.projId = projId;
@@ -84,7 +81,7 @@ io.on("connection", (socket) => {
 });
 
 app.get("/test", (req, res)=>{
-  res.send("Tesing")
+  res.send("Testing")
 })
 
 server.listen(port, () => {
