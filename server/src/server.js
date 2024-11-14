@@ -8,14 +8,15 @@ require("dotenv").config();
 
 const dburl = process.env.DB_URI;
 const server = http.createServer(app);
-const corsOption = {
-  origin: "https://codemeet-nine.vercel.app",
-  credentials: true,
-};
 
 const io = new Server(server, {
-  cors: corsOption,
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
 });
+
 
 const port = 3000;
 
