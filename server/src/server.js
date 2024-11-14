@@ -9,20 +9,25 @@ require("dotenv").config();
 const dburl = process.env.DB_URI;
 const server = http.createServer(app);
 
+
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: ["http://localhost:5173", "https://codemeet-nine.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
+
+
 const corsOptions = {
-  origin: ["http://localhost:5173/", "https://codemeet-nine.vercel.app/"],
+  origin: ["http://localhost:5173", "https://codemeet-nine.vercel.app"],
   methods: ["GET", "POST"],
   credentials: true,
 };
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));  // Handles preflight requests
+
 
 const port = 3000;
 
