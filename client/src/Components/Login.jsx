@@ -26,6 +26,7 @@ function Login() {
         navigate("/home");
       }
     } catch (error) {
+      console.log(error);
       setErr(error.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
