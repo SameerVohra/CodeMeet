@@ -19,7 +19,7 @@ const Login = async(req, res) => {
     res.status(201).json({email});
   } catch (error) {
     console.log(error);
-    res.status(501).send("Internal Server Error");
+    res.status(501).json({error: error});
     return;
   }
 }
