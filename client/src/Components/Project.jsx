@@ -108,6 +108,7 @@ function Project() {
       });
       setOutput(data.output || "No output available");
     } catch (err) {
+      console.log(err)
       setError("Compilation error: Please check your code for syntax issues.");
     } finally {
       setLoading(false);

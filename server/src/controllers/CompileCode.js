@@ -32,7 +32,7 @@ const CompileCode = async (req, res) => {
 
   } catch (error) {
     console.error("Internal server error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error });
   }
 };
 
