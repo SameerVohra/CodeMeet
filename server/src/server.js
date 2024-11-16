@@ -36,6 +36,7 @@ const usersPerProject = {};
 
 // Socket.IO connection
 io.on("connection", (socket) => {
+  console.log(socket, " joined")
   socket.on("joinProject", ({ projId, email }) => {
     socket.data.projId = projId;
     socket.data.email = email;
