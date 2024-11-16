@@ -13,7 +13,7 @@ const app = express();
 
 // CORS configuration aligned with server.js
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://codemeet-nine.vercel.app"],
+  origin: "*",
   methods: ["GET", "POST"],
   credentials: true,
 };
