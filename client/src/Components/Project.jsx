@@ -24,6 +24,7 @@ function Project() {
   const email = localStorage.getItem("email");
 
   useEffect(() => {
+    socket.on("connection", (socket)=>console.log("Socket joined", socket))
     socket.emit("joinProject", { projId, email });
     socket.on("user:joined", ({ usersJoined }) => {
       setUsers(usersJoined);
