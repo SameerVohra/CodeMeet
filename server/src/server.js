@@ -1,29 +1,21 @@
 const app = require("./app");
 const cors = require("cors");
-const http = require("http");
 const { default: mongoose } = require("mongoose");
-const { Server } = require("socket.io");
 
 require("dotenv").config();
 
 const dburl = process.env.DB_URI;
-const server = http.createServer(app);
 
-const io = new Server(server, {
+const httpServer = require("http").createServer(app);
+const options = {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
+    origin: ["http://localhost:3000", "https://codemeet-backend.onrender.com", "http://localhost:5173"],
   },
-});
-
-const corsOptions = {
-  origin: "*",
-  methods: ["GET", "POST"],
-  credentials: true,
 };
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); 
+const io = require("socket.io")(httpServer, options);
+
+app.use(cors(options));
+app.options("*", cors(options)); 
 
 const port = 3000;
 
@@ -85,6 +77,6 @@ app.get("/test", (req, res)=>{
   res.send("Testing")
 })
 
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`Started listening to port ${port}`);
 });
