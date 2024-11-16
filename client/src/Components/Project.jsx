@@ -17,6 +17,7 @@ function Project() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [users, setUsers] = useState([]);
+  const [isError, setIsError] = useState(false);
 
   const params = new URLSearchParams(window.location.search);
   const projId = params.get("id");
@@ -100,6 +101,7 @@ function Project() {
   const handleCompile = async () => {
     setLoading(true);
     setError("");
+    setIsError(false);
     try {
       const { data } = await axios.post(`${link.url}/compile`, {
         code: text,
@@ -109,6 +111,8 @@ function Project() {
       setOutput(data.output || "No output available");
     } catch (err) {
       console.log(err)
+      setIsError(true);
+      setOutput(err.response.data.error);
       setError("Compilation error: Please check your code for syntax issues.");
     } finally {
       setLoading(false);
@@ -183,7 +187,7 @@ function Project() {
 
       <div className="w-full max-w-4xl p-6 bg-gray-800 rounded-lg shadow-lg border border-gray-700 mt-4">
         <h2 className="text-lg font-semibold mb-2">Output:</h2>
-        <pre className="whitespace-pre-wrap text-green-400">{output}</pre>
+        <pre className={`whitespace-pre-wrap ${isError ? 'text-red-500' : 'text-green-400'}`}> {output} </pre>
       </div>
 
 
