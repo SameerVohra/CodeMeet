@@ -5,7 +5,7 @@ import axios from 'axios';
 import debounce from 'lodash.debounce';
 import Editor from '@monaco-editor/react';
 
-const socket = io(link.url);
+const socket = io(link.url, {withCredentials:true});
 
 function Project() {
   const [text, setText] = useState("");
