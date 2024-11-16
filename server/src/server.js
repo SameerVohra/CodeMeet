@@ -18,12 +18,12 @@ const io = new Server(server, {
 });
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://codemeet-nine.vercel.app"],
+  origin: "*",
   methods: ["GET", "POST"],
   credentials: true,
 };
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));  // Handles preflight requests
+app.options("*", cors(corsOptions)); 
 
 const port = 3000;
 
