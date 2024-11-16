@@ -14,8 +14,13 @@ const options = {
 };
 const io = require("socket.io")(httpServer, options);
 
-app.use(cors(options));
-app.options("*", cors(options)); 
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); 
 
 const port = 3000;
 
