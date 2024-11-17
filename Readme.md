@@ -5,9 +5,7 @@ A collaborative code editor that enables multiple users to work together on a si
 ## Features
 
 - **Real-time Collaboration**: Multiple users can edit code simultaneously, with live updates.
-- **Video Chat**: Communicate with collaborators directly within the editor using the integrated video chat feature.
 - **Multi-language Code Compiler**: Compile and run code in the following programming languages:
-  - C
   - C++
   - Python
 
@@ -65,7 +63,7 @@ To get started with CodeMeet, follow these steps:
    npm run dev
    ```
 
-   The application should now be running on [http://localhost:3000](http://localhost:3000).
+   The server should now be running on [http://localhost:3000](http://localhost:3000).
 
 ## Usage
 
