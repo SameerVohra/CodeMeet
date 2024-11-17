@@ -12,15 +12,11 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
   },
 });
 
 const corsOptions = {
   origin: "*",
-  methods: ["GET", "POST"],
-  credentials: true,
 };
 app.use(cors(corsOptions));
 
