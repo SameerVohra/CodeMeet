@@ -1,55 +1,53 @@
-const express = require("express");
+const app = require("./app");
 const cors = require("cors");
+const http = require("http");
 const { default: mongoose } = require("mongoose");
+const { Server } = require("socket.io");
+
 require("dotenv").config();
 
-const app = express();
+const dburl = process.env.DB_URI;
+const server = http.createServer(app);
 
-// Middleware
-app.use(express.json());
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://codemeet-backend.onrender.com", "http://localhost:5173"],
+  origin: "*",
   methods: ["GET", "POST"],
   credentials: true,
 };
 app.use(cors(corsOptions));
 
-// Database Connection
-const dburl = process.env.DB_URI;
+const port = 3000;
+
 mongoose
   .connect(dburl)
   .then(() => console.log("Connected to DB Successfully"))
   .catch((error) => console.log("Error connecting to DB: ", error));
 
-// Create HTTP Server
-const httpServer = require("http").createServer(app);
-
-// Attach Socket.IO to the HTTP server
-const io = require("socket.io")(httpServer, {
-  cors: {
-    origin: ["http://localhost:3000", "https://codemeet-backend.onrender.com", "http://localhost:5173"],
-    methods: ["GET", "POST"],
-  },
-});
-
-// Socket.IO logic
 const usersPerProject = {};
 
+// Socket.IO connection
 io.on("connection", (socket) => {
-  console.log(`${socket.id} connected`);
-
   socket.on("joinProject", ({ projId, email }) => {
     socket.data.projId = projId;
     socket.data.email = email;
-
+    
     if (!usersPerProject[projId]) {
       usersPerProject[projId] = new Set();
     }
 
     usersPerProject[projId].add(email);
     socket.join(projId);
-
+    
     io.to(projId).emit("user:joined", { usersJoined: Array.from(usersPerProject[projId]) });
+    
     console.log(`User ${email} joined project ${projId}`);
   });
 
@@ -81,13 +79,10 @@ io.on("connection", (socket) => {
   socket.emit("message", "Welcome to the project");
 });
 
-// Express Routes
-app.get("/test", (req, res) => {
-  res.send("Testing");
-});
+app.get("/test", (req, res)=>{
+  res.send("Testing")
+})
 
-// Start the server
-const port = 3000;
-httpServer.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+server.listen(port, () => {
+  console.log(`Started listening to port ${port}`);
 });

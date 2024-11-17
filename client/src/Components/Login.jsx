@@ -17,17 +17,17 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    setErr('');
+    console.log(email, password)
     try {
       const response = await axios.post(`${link.url}/login`, { email, password });
-      setErr('');
       if (response.status === 201) {
         localStorage.setItem("email", response.data.email);
         navigate("/home");
       }
     } catch (error) {
       console.log(error);
-      setErr(error.response?.data?.message || 'Login failed. Please try again.');
+      setErr(error.response?.data || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -42,7 +42,7 @@ function Login() {
       justifyContent="center"
       minHeight="100vh"
       sx={{
-        background: 'linear-gradient(135deg, #1A2980, #26D0CE)',
+        background: 'linear-gradient(145deg, #1A2980, #26D0CE)',
         color: 'white',
       }}
     >
