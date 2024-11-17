@@ -1,52 +1,55 @@
-const app = require("./app");
+const express = require("express");
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
-
 require("dotenv").config();
 
-const dburl = process.env.DB_URI;
+const app = express();
 
-const httpServer = require("http").createServer(app);
-const options = {
-  cors: {
-    origin: ["http://localhost:3000", "https://codemeet-backend.onrender.com", "http://localhost:5173"],
-  },
-};
-const io = require("socket.io")(httpServer, options);
-
+// Middleware
+app.use(express.json());
 const corsOptions = {
-  origin: "*",
+  origin: ["http://localhost:3000", "https://codemeet-backend.onrender.com", "http://localhost:5173"],
   methods: ["GET", "POST"],
   credentials: true,
 };
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); 
 
-const port = 3000;
-
+// Database Connection
+const dburl = process.env.DB_URI;
 mongoose
   .connect(dburl)
   .then(() => console.log("Connected to DB Successfully"))
   .catch((error) => console.log("Error connecting to DB: ", error));
 
+// Create HTTP Server
+const httpServer = require("http").createServer(app);
+
+// Attach Socket.IO to the HTTP server
+const io = require("socket.io")(httpServer, {
+  cors: {
+    origin: ["http://localhost:3000", "https://codemeet-backend.onrender.com", "http://localhost:5173"],
+    methods: ["GET", "POST"],
+  },
+});
+
+// Socket.IO logic
 const usersPerProject = {};
 
-// Socket.IO connection
 io.on("connection", (socket) => {
-  console.log(socket, " joined")
+  console.log(`${socket.id} connected`);
+
   socket.on("joinProject", ({ projId, email }) => {
     socket.data.projId = projId;
     socket.data.email = email;
-    
+
     if (!usersPerProject[projId]) {
       usersPerProject[projId] = new Set();
     }
 
     usersPerProject[projId].add(email);
     socket.join(projId);
-    
+
     io.to(projId).emit("user:joined", { usersJoined: Array.from(usersPerProject[projId]) });
-    
     console.log(`User ${email} joined project ${projId}`);
   });
 
@@ -78,10 +81,13 @@ io.on("connection", (socket) => {
   socket.emit("message", "Welcome to the project");
 });
 
-app.get("/test", (req, res)=>{
-  res.send("Testing")
-})
+// Express Routes
+app.get("/test", (req, res) => {
+  res.send("Testing");
+});
 
-app.listen(port, () => {
-  console.log(`Started listening to port ${port}`);
+// Start the server
+const port = 3000;
+httpServer.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
