@@ -147,7 +147,6 @@ function Project() {
         >
           <option value="cpp">C++</option>
           <option value="python">Python</option>
-          <option value="c">C</option>
         </select>
 
         <button
